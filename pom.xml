@@ -50,10 +50,6 @@
 		<jdk.version>1.6</jdk.version>
 	</properties>
 
-	<modules>
-		<module>ace-parser</module>
-		<module>ace-lookup</module>
-	</modules>
 
 	<build>
 		<pluginManagement>
@@ -136,4 +132,8 @@
 			<version>1.0.11</version>
 		</dependency>
 	</dependencies>
+	<modules>
+		<module>ace-core</module>
+		<module>ace-lookup</module>
+	</modules>
 </project>

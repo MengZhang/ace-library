@@ -17,7 +17,7 @@ public enum LookupCodesEnum {
 
     private final HashMap<String,String> modelLookupMap = new HashMap<String, String>();
     private final HashMap<String, HashMap<String,String>> aceLookupMap = new HashMap<String, HashMap<String, String>>();
-    private final Logger LOG = LoggerFactory.getLogger("org.agmip.ace.LookupCodesEnum");
+    private final Logger LOG = LoggerFactory.getLogger(LookupCodesEnum.class);
 
     LookupCodesEnum() {
         InputStream metadata = getClass().getClassLoader().getResourceAsStream("metadata_codes.csv");
