@@ -21,11 +21,11 @@ public class AceComponent {
     public AceComponent(byte[] component) {
         this.component = component;
     }
-
+    
     public byte[] getRawComponent() {
         return this.component;
     }
-
+    
     public JsonParser getParser() throws IOException {
         return JsonFactoryImpl.INSTANCE.getParser(this.component);
     }

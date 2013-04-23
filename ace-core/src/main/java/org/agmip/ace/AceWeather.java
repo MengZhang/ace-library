@@ -9,7 +9,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-public class AceWeather extends AceComponent {
+public class AceWeather extends AceComponent implements IAceBaseComponent {
     private String wid;
     private AceRecordCollection dailyWeather = null;
     private List<String> recordYears;
@@ -21,8 +21,12 @@ public class AceWeather extends AceComponent {
         this.wid = this.getValue("wid");
     }
 
-    public String getId() throws IOException {
+    public String getId() {
         return this.wid;
+    }
+    
+    public AceComponentType getType() {
+        return AceComponentType.ACE_WEATHER;
     }
 
     public AceRecordCollection getDailyWeather() throws IOException {

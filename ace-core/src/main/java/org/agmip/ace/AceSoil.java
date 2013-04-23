@@ -2,7 +2,7 @@ package org.agmip.ace;
 
 import java.io.IOException;
 
-public class AceSoil extends AceComponent {
+public class AceSoil extends AceComponent implements IAceBaseComponent {
     private String sid;
     private AceRecordCollection soilLayers = null;
 
@@ -13,6 +13,10 @@ public class AceSoil extends AceComponent {
 
     public String getId() {
         return this.sid;
+    }
+    
+    public AceComponentType getType() {
+        return AceComponentType.ACE_SOIL;
     }
 
     public AceRecordCollection getSoilLayers() throws IOException {

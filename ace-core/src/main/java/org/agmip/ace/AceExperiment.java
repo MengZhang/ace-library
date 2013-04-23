@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
-public class AceExperiment extends AceComponent {
+public class AceExperiment extends AceComponent implements IAceBaseComponent {
     private String eid;
     private AceWeather weather;
     private AceSoil    soil;
@@ -21,8 +21,12 @@ public class AceExperiment extends AceComponent {
         this.extractSubcomponents();
     }
 
-    public String getId() throws IOException {
+    public String getId() {
         return this.eid;
+    }
+    
+    public AceComponentType getType() {
+        return AceComponentType.ACE_EXPERIMENT;
     }
 
     public AceWeather getWeather() {
@@ -54,9 +58,7 @@ public class AceExperiment extends AceComponent {
     }
 
     private void extractSubcomponents() throws IOException {
-        ByteArrayOutputStream finalOut = new ByteArrayOutputStream();
         JsonParser p = this.getParser();
-        JsonGenerator g = this.getGenerator(finalOut);
         JsonToken t;
 
         t = p.nextToken();
@@ -81,14 +83,9 @@ public class AceExperiment extends AceComponent {
                 } else if (currentName.equals("events")) {
                     this.events = new AceEventCollection(out);
                 }
-            } else {
-                g.copyCurrentEvent(p);
-            }
+            } 
             t = p.nextToken();
         }
-        g.flush();
-        byte[] experiment = finalOut.toByteArray();
-        this.component = experiment;
         p.close();
     }
 }
