@@ -5,7 +5,7 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.agmip.ace.lookup.LookupCodesEnum;
+import org.agmip.ace.lookup.LookupCodesSingleton;
 
 public class LookupCodes {
     private static final Logger LOG = LoggerFactory.getLogger("LookupCodes.class");
@@ -45,7 +45,7 @@ public class LookupCodes {
         }
 
         HashMap<String, String> entry = new HashMap<String, String>();
-        entry = LookupCodesEnum.INSTANCE.aceLookup(lookupString);
+        entry = LookupCodesSingleton.INSTANCE.aceLookup(lookupString);
 
         if (entry.isEmpty()) {
             return origCode;
@@ -73,6 +73,6 @@ public class LookupCodes {
         code     = code.toLowerCase();
 
         String lookupString = model+"_"+variable+"_"+code;
-        return LookupCodesEnum.INSTANCE.modelLookup(lookupString);
+        return LookupCodesSingleton.INSTANCE.modelLookup(lookupString);
     }
 }

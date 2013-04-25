@@ -12,14 +12,14 @@ import org.slf4j.LoggerFactory;
 import au.com.bytecode.opencsv.CSVReader;
 
 
-public enum LookupCodesEnum {
+public enum LookupCodesSingleton {
     INSTANCE;
 
     private final HashMap<String,String> modelLookupMap = new HashMap<String, String>();
     private final HashMap<String, HashMap<String,String>> aceLookupMap = new HashMap<String, HashMap<String, String>>();
-    private final Logger LOG = LoggerFactory.getLogger(LookupCodesEnum.class);
+    private final Logger LOG = LoggerFactory.getLogger(LookupCodesSingleton.class);
 
-    LookupCodesEnum() {
+    LookupCodesSingleton() {
         InputStream metadata = getClass().getClassLoader().getResourceAsStream("metadata_codes.csv");
         InputStream crops = getClass().getClassLoader().getResourceAsStream("crop_codes.csv");
         InputStream management = getClass().getClassLoader().getResourceAsStream("management_codes.csv");
