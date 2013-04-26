@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.agmip.ace.AceComponentType;
 import org.agmip.ace.IAceBaseComponent;
-import org.agmip.ace.util.JsonFactoryImpl;
+import org.agmip.ace.lookup.LookupPath;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -38,6 +39,9 @@ public class AceFunctions {
     
     public static boolean verifyId(IAceBaseComponent source) throws IOException {
         String id = source.getId();
+        if (id == null) {
+            return false;
+        }
         List<String> idKey = new ArrayList<String>();
         switch(source.getType()) {
         case ACE_EXPERIMENT:
@@ -49,8 +53,7 @@ public class AceFunctions {
         case ACE_WEATHER:
             idKey.add("wid");
             break;
-        }
-        if (id == null) {
+        default:
             return false;
         }
         return id == generateId(removeKeys(source, idKey));
@@ -79,5 +82,28 @@ public class AceFunctions {
         g.flush();
         g.close();
         return out.toByteArray();
+    }
+    
+    public static AceComponentType getComponentTypeFromKey(String key) {
+        String path = LookupPath.INSTANCE.getPath(key);
+        if (path.contains("@")) {
+            if (path.contains("events")) {
+                return AceComponentType.ACE_EVENT;
+            } else {
+                return AceComponentType.ACE_RECORD;
+            }
+        } else if (path.contains("initial")) {
+            return AceComponentType.ACE_INITIALCONDITIONS;
+        } else if (path.contains("weather")) {
+            return AceComponentType.ACE_WEATHER;
+        } else if (path.contains("soil")) {
+            return AceComponentType.ACE_SOIL;
+        } else {
+            return AceComponentType.ACE_EXPERIMENT;
+        }
+    }
+    
+    public static byte[] getBlankComponent() throws IOException {
+        return "{}".getBytes("UTF-8");
     }
 }

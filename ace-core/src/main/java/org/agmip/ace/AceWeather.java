@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.agmip.ace.util.AceFunctions;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+
+import com.google.common.collect.Lists;
 
 public class AceWeather extends AceComponent implements IAceBaseComponent {
     private String wid;
@@ -19,6 +22,9 @@ public class AceWeather extends AceComponent implements IAceBaseComponent {
     public AceWeather(byte[] source) throws IOException {
         super(source);
         this.wid = this.getValue("wid");
+        if(this.wid == null) {
+            this.update("wid", AceFunctions.generateId(source), true);
+        }
     }
 
     public String getId() {
@@ -73,5 +79,19 @@ public class AceWeather extends AceComponent implements IAceBaseComponent {
             }
         }
         return this.missingDates;
+    }
+    
+    @Override
+    public AceWeather update(String key, String newValue, boolean addIfMissing) throws IOException {
+        super.update(key, newValue, addIfMissing);
+        if (key == "wid") {
+            this.wid = newValue;
+        } else {
+            List<String> id = Lists.newArrayList("wid");
+            this.component = AceFunctions.removeKeys(this.component, id);
+            this.update("wid", AceFunctions.generateId(this.component), true);
+            this.hasUpdate = true;
+        }
+        return this;
     }
 }

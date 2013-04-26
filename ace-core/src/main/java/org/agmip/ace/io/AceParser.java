@@ -1,11 +1,15 @@
 package org.agmip.ace.io;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
 
-import org.agmip.ace.AceDataset;
 import org.agmip.ace.AceComponentType;
+import org.agmip.ace.AceDataset;
 import org.agmip.ace.util.JsonFactoryImpl;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -22,6 +26,37 @@ public class AceParser {
 
     public static AceDataset parse(InputStream source) throws IOException {
         return run(JsonFactoryImpl.INSTANCE.getParser(source));
+    }
+    
+    public static AceDataset parse(String json) throws IOException {
+        byte[] shrink = json.getBytes("UTF-8");
+        json = null;
+        return run(JsonFactoryImpl.INSTANCE.getParser(shrink));
+    }
+    
+    public static AceDataset parseACEB(InputStream source) throws IOException {
+        DataInputStream dis = new DataInputStream(source);
+        byte[] aceb = new byte[4];
+        source.read(aceb);
+        String validHeader = new String(aceb, "UTF-8");
+        int version = dis.readInt();
+        dis.readLong(); // Not yet implemented
+        if ((validHeader != "ACEB") && (((version >> 24) & 0x7f) != AceVersion.ACEB_MAJOR_VERSION)) {
+            throw new IOException("Invalid Ace Binary file");
+        }
+        GZIPInputStream gis = new GZIPInputStream(source);
+        AceDataset dataset = parse(gis);
+        gis.close();
+        dis.close();
+        source.close();
+        return dataset;
+    }
+    
+    public static AceDataset parseACEB(File source) throws IOException {
+        FileInputStream fis = new FileInputStream(source);
+        AceDataset dataset = parseACEB(fis);
+        fis.close();
+        return dataset;
     }
 
     private static AceDataset run(JsonParser p) throws IOException {

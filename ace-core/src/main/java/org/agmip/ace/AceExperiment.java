@@ -2,10 +2,14 @@ package org.agmip.ace;
 
 import java.io.IOException;
 import java.io.ByteArrayOutputStream;
+import java.util.List;
+
+import org.agmip.ace.util.AceFunctions;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.google.common.collect.Lists;
 
 public class AceExperiment extends AceComponent implements IAceBaseComponent {
     private String eid;
@@ -18,6 +22,9 @@ public class AceExperiment extends AceComponent implements IAceBaseComponent {
     public AceExperiment(byte[] source) throws IOException {
         super(source);
         this.eid = this.getValue("eid");
+        if(this.eid == null) {
+            this.update("eid", AceFunctions.generateId(source), true);
+        }
         this.extractSubcomponents();
     }
 
@@ -87,5 +94,19 @@ public class AceExperiment extends AceComponent implements IAceBaseComponent {
             t = p.nextToken();
         }
         p.close();
+    }
+    
+    @Override
+    public AceExperiment update(String key, String newValue, boolean addIfMissing) throws IOException {
+        super.update(key, newValue, addIfMissing);
+        if (key == "eid") {
+            this.eid = newValue;
+        } else {
+            List<String> id = Lists.newArrayList("eid");
+            this.component = AceFunctions.removeKeys(this.component, id);
+            this.update("eid", AceFunctions.generateId(this.component), true);
+            this.hasUpdate = true;
+        }
+        return this;
     }
 }

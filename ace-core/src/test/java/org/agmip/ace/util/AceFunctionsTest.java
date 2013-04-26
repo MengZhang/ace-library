@@ -9,7 +9,6 @@ import org.agmip.ace.AceDataset;
 import org.agmip.ace.AceExperiment;
 import org.agmip.ace.io.AceParser;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -43,12 +42,4 @@ public class AceFunctionsTest {
             System.out.println("Generated new id: "+AceFunctions.generateId(e));
         }
     }
-    
-    @Test
-    @Ignore
-    public void fixIds() throws IOException {
-//        HashMap<String, String> wid = new HashMap<String, String>();
-//        HashMap<String, String> sid = new HashMap<String, String>();
-    }
-
 }
